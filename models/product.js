@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const ptoductSchema = mongoose.Schema({
+const productSchema = mongoose.Schema({
     productId : {
         type: String,
         required : true,
@@ -22,10 +22,15 @@ const ptoductSchema = mongoose.Schema({
     lastPrice :{
         type : Number,
         required : true
+    },
+    description :{
+        type: String
     }
 
 })
 
-const   Product = mongoose.model ("products", productScheme);
+const   Product = mongoose.model ("products", productSchema);
 
 export default Product;
+
+//john1.doe@example.com //john123
