@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import userRouter from './routes/userRouter.js';
 import jwt from "jsonwebtoken";
 import ProductRouter from './routes/productProduct.js';
+import orderRouter from './routes/orderRouter.js';
 
 
 const app = express();
@@ -51,6 +52,7 @@ app.use(
 
 app.use("/api/users",userRouter)
 app.use("/api/products", ProductRouter)
+app.use ("/api/orders", orderRouter)
 
 
 app.listen(

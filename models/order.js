@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const orderScheme = mongoose.SchemaType({
+const orderScheme = new mongoose.Schema({
     orderId :{
         type : String,
         required : true,
@@ -17,10 +17,10 @@ const orderScheme = mongoose.SchemaType({
         
         },
         price :{
-            typr : Number,
+            type : Number,
             required : true
         },
-        quentity :{
+        quantity :{
             type : Number,
             required : true
         }
@@ -31,7 +31,7 @@ const orderScheme = mongoose.SchemaType({
         required : true
     },
     date : {
-        type : date,
+        type : Date,
         default : Date.now
     },
     paymentId : {
@@ -41,7 +41,7 @@ const orderScheme = mongoose.SchemaType({
         type : String,
         default : "preparing"
     },
-    nates : {
+    notes : {
         type : String,  
     },
     name : {
@@ -54,9 +54,10 @@ const orderScheme = mongoose.SchemaType({
     },
     phone : {
         type : String,
-        requried : true 
+        required : true 
     }
 })
 
 const Order = mongoose.model ("orders", orderScheme);
 
+export default Order;
