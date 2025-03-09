@@ -1,16 +1,22 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-
 import userRouter from './routes/userRouter.js';
 import jwt from "jsonwebtoken";
-import ProductRouter from './routes/productProduct.js';
+import dotenv from "dotenv";
+import productRouter from './routes/productRouter.js';
 import orderRouter from './routes/orderRouter.js';
+import cors from "cors";
+dotenv.config()
+
+
 
 
 const app = express();
 
-const mongoUrl = "mongodb+srv://anjanaslt:anjana123@cluster0.kyl2w.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+const mongoUrl = process.env.MONGO_DB_URI
+
+app.use(cors())
 
 mongoose.connect(mongoUrl,{})
 
@@ -31,7 +37,7 @@ app.use(
     console.log(token)
 
     if(token != null){
-      jwt.verify(token,"cbc-secret-key-111" , (error,decoded)=>{
+      jwt.verify(token, process.env.SECRET , (error,decoded)=>{
 
         if(!error){
           req.user = decoded        
@@ -51,7 +57,7 @@ app.use(
 
 
 app.use("/api/users",userRouter)
-app.use("/api/products", ProductRouter)
+app.use("/api/products",productRouter)
 app.use ("/api/orders", orderRouter)
 
 

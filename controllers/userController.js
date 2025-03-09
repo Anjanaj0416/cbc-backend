@@ -1,6 +1,9 @@
 import User from "../models/user.js";
-import bcrypt from "bcrypt"; 
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config()
 
 export function createUser(req,res){
 
@@ -17,7 +20,7 @@ export function createUser(req,res){
     })
         .catch(()=>{
             res.json({
-                message:"user snot created"
+                message:"user not created"
             })
         })
 }
@@ -43,10 +46,16 @@ export function loginUser(req,res){
                         isBlocked : user.isBlocked,
                         type : user.type,
                         profilePicture: user.profilePicture
-                    },"cbc-secret-key-111")
+                    },process.env.SECRET)
                     res.json({
-                        message :"user created",
-                        Token : token
+                        message :"user logged in",
+                        Token : token,
+                        user:{
+                            firstName : user.firstName,
+                            lastName : user.lastName,
+                            type : user.type
+                        }
+
                     })
                     
                 }else{
