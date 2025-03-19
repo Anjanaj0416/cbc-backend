@@ -53,7 +53,7 @@ export async function createOrder(req, res) {
       newProductArray[i] = {
         name: product.productName,
         price: product.lastPrice,
-        quantity: newOrderData.orderedItems[i].quantity,
+        quantity: newOrderData.orderedItems[i].qty,
         image: product.images[1],
 
         
@@ -74,6 +74,94 @@ export async function createOrder(req, res) {
       message: "Order created",
       order : savedOrder
     });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function getOrders(req, res) {
+  
+    
+  try {
+    if (isCustomer(req)) {
+    const orders = await Order.find({ email: req.user.email });
+
+    res.json(orders);
+    return;
+    }else if(isAdmin(req)){
+      const orders = await Order.find({});
+
+      res.json(orders);
+      return;
+    }else{
+      res.json({
+        message: "Please login to view orders"
+      })
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+}
+
+export async function getQuote(req, res) {
+
+
+  try {
+
+    const newOrderData = req.body;
+
+    const newProductArray = [];
+
+    let total = 0;
+    let labelTotal = 0
+
+    for (let i = 0; i < newOrderData.orderedItems.length; i++) {
+      const product = await Product.findOne({
+        productId: newOrderData.orderedItems[i].productId,
+      });
+
+      if (product == null) {
+        res.json({
+          message:
+            "Product with id " +
+            newOrderData.orderedItems[i].productId +
+            " not found",
+        });
+        return;
+      }
+
+      total += product.lastPrice * newOrderData.orderedItems[i].qty;
+      labelTotal += product.price * newOrderData.orderedItems[i].qty
+
+      newProductArray[i] = {
+        name: product.productName,
+        price: product.lastPrice,
+        ladelPrice: product.price,
+        discount : product.price - product.lastPrice,
+        quantity: newOrderData.orderedItems[i].qty,
+        image: product.images[0],
+
+        
+      };
+    }
+    console.log(newProductArray);
+
+    newOrderData.orderedItems = newProductArray;
+
+    newOrderData.total = total;
+    newOrderData.labelTotal = labelTotal;
+
+    res.json({
+      orederedItems : newProductArray,
+      total : total,
+      labelTotal : labelTotal,
+    });
+
+
   } catch (error) {
     res.status(500).json({
       message: error.message,
